@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Ingredient {
+private:
+	string nume;
+	float pret;
+	int cantitate;
+public:
+	
+	Ingredient() {
+	
+	}
+
+
+	Ingredient(string Nume, float Pret, int Cantitate) {
+		nume = Nume;
+		pret = Pret;
+		cantitate = Cantitate;
+	}
+	Ingredient& operator +=(const int& val) {
+		cantitate += val;
+		return *this ;
+	}
+	friend ostream& operator<<(ostream& COUT, Ingredient& ingr) {
+		COUT << "Nume:" << ingr.nume << endl;
+		COUT << "Pret:" << ingr.pret << endl;
+		COUT << "Cantitate" << ingr.cantitate << endl;
+		return COUT;
+	}
+	friend istream &operator >>(istream &CIN, Ingredient& ingr) {
+		cout << "Ingredient nume" << endl;
+		CIN >> ingr.nume;
+		cout << "Ingredient pret" << endl;
+		CIN >> ingr.pret;
+		cout << "Ingredient cantitate: " << endl;
+		CIN>> ingr.cantitate;
+		
+		return CIN;
+	}
+	
+};
+class Pizza {
+private:
+	char denumire[50];
+	int nrIngrediente;
+	vector <Ingredient> ingr;
+public:
+	Pizza() {
+		
+		nrIngrediente = 0;
+
+	}
+	Pizza(const char Denumire[50]) {
+		strcpy_s(denumire, Denumire);
+		nrIngrediente = 0;
+		
+		
+	}
+
+	Pizza(char Denumire, int NrIngrediente, Ingredient  Ingr) {
+		strcpy_s(denumire, &Denumire);
+		nrIngrediente = NrIngrediente;
+		ingr.push_back(Ingr);
+
+
+
+	}
+	friend ostream& operator<<(ostream& COUT, Pizza& pizza) {
+		COUT << "Denumire:" << pizza.denumire << endl;
+		COUT << "Nr Ingrediente:" << pizza.nrIngrediente << endl;
+		COUT << "Ingrediente:";
+		for (int i = 0; i <= pizza.nrIngrediente; i++)
+			COUT << pizza.ingr[i] << endl;
+		
+		return COUT;
+
+	}
+	friend istream& operator >>(istream& CIN, Pizza& pizza) {
+		cout << "Denumire pizza:";
+		CIN >> pizza.denumire;
+		cout << "Nr Ingrediente Pizza:";
+		CIN >> pizza.nrIngrediente;
+		for (int i = 0; i <=pizza.nrIngrediente; i++) {
+			cout << "Ingredientul " << i << "nume" << endl;
+			CIN >> pizza.ingr[i].nume;
+			cout << "Ingredientul " << i << "pret" << endl;
+			CIN >> pizza.ingr[i].pret;
+			cout << "Ingredientul " << i << "cantitate" << endl;
+			CIN >> pizza.ingr[i].cantitate;
+		}
+
+		return CIN;
+	}
+	friend Pizza operator +(const Ingredient& i,Pizza& pizza) {
+		pizza.ingr.push_back(i);
+		pizza.nrIngrediente = pizza.nrIngrediente + 1;
+		return pizza;
+	}
+	friend bool operator >(const Pizza& pizza1,const Pizza& pizza2) {
+		return pizza1.nrIngrediente > pizza2.nrIngrediente;
+		
+	}
+	
+
+	
+};
+	int main() {
+		
+		Ingredient i1("Piper", 0.5, 10), i2("Nimic", 0.0, 0);
+		cout << i1;
+		cin >> i2;
+		i1 += 500; // aduna o valoare la cantitatea disponibila
+		Ingredient i3 = i1, i4, i5(i1);
+		i4 = i1;
+		Pizza pizza1("Clasic"), pizza2;
+		pizza1 = i1 + pizza1; // adaugare ingredient 1 in pizza 1
+		cin >> pizza2;
+		cout << pizza1 << pizza2;
+		if (pizza1 > pizza2) cout << "pizza1 are mai multe ingrediente decat pizza2";
+		else cout << "pizza2 are mai multe ingrediente decat pizza1";
+
+	}
+
